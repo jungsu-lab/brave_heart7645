@@ -17,8 +17,8 @@ const tagCounts = Array.from(new Set(posts.flatMap((post) => post.data.tags))).m
 <BaseLayout title="jungsu blog | 전체 기록">
 	<section class="hero">
 		<p class="eyebrow">전체 기록</p>
-		<h1>모든 기록.</h1>
-		<p>데일리와 공부 기록을 모은 전체 색인.</p>
+		<h1>모든 기록</h1>
+		<p>데일리와 공부 기록 모음</p>
 	</section>
 
 	{
@@ -83,8 +83,8 @@ const tagCounts = Array.from(new Set(posts.flatMap((post) => post.data.tags))).m
 			) : (
 				<div class="note-panel" role="status">
 					<p class="kicker">준비 중</p>
-					<h2>아직 공개된 기록 없음.</h2>
-					<p>최신 기록 대기.</p>
+					<h2>아직 공개된 기록 없음</h2>
+					<p>최신 기록 대기</p>
 				</div>
 			)
 		}
