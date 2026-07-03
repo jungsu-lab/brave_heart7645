@@ -7,15 +7,48 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 		<p class="eyebrow">About</p>
 		<h1>About this archive.</h1>
 		<p class="lede">
-			작업하다가 남긴 생각, 공부하며 정리한 것, 만들고 실험한 것들을 한곳에 모아둔
-			개인 기록실입니다.
+			작업 생각, 공부 정리, 제작 실험을 모은 개인 기록실.
 		</p>
 	</section>
 
 	<section class="page-section">
 		<p>
-			완성된 모습만 보여주기보다, 어떻게 생각했고 무엇을 고쳤는지까지 남기는 쪽을
-			좋아합니다. 그래서 이 블로그는 포트폴리오이면서 동시에 작업 노트입니다.
+			완성본보다 과정 중심. 생각의 흐름, 수정한 이유, 다음 아이디어까지 남기는
+			작업 노트.
 		</p>
+	</section>
+
+	<section class="page-section">
+		<div class="section-heading">
+			<h2>최근 작업 메모</h2>
+		</div>
+		<div class="note-panel">
+			<p class="kicker">AI 영상 공모전 준비</p>
+			<h2>아이디어를 쌓아갈 예정.</h2>
+			<p>
+				후보 공모전은
+				<a href="https://crowlly.xyz/competitions/k-ai-contents-award-2026" target="_blank" rel="noreferrer">K-AI Contents Award</a>
+				와
+				<a href="https://www.all-con.co.kr/view/contest/539239?page=1&sortname=cl_order&sortorder=asc&stx=ai%20%EA%B4%91%EA%B3%A0" target="_blank" rel="noreferrer">코웨이 비렉스 AI 영상 광고·숏폼 공모전</a>.
+				콘셉트, 장면 아이디어, 제작 방향을 이곳에 추가 예정.
+			</p>
+		</div>
+		<div class="note-panel">
+			<p class="kicker">딸기 시뮬레이터 회고</p>
+			<h2>만들었지만 공개를 멈춘 작업.</h2>
+			<p>
+				딸기 온실 시뮬레이터를 만들어 GitHub에 올렸지만, 정제된 데이터는 상태
+				기반 전이 검증에는 쓸 수 있어도 실제 제어 행동의 효과를 설명하기에는
+				부족했다. 관수, 환기, 양액, 난방 같은 상황을 나누어보는 시도는 했지만,
+				관측 전이 데이터는 action-free에 가까웠고 액션 컬럼의 시점과 의미를
+				검증하지 못했다.
+			</p>
+			<p>
+				그래서 결과물을 유지하기보다 일단 내렸다. 이 작업은 성공 사례라기보다,
+				농업 데이터를 다룰 때 입력 피처, 평가 타깃, 제어 행동을 분리하고,
+				규칙의 출처와 적용 범위를 먼저 명확히 해야 한다는 점을 배운 기록으로
+				남긴다.
+			</p>
+		</div>
 	</section>
 </BaseLayout>

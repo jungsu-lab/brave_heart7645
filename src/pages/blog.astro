@@ -7,6 +7,7 @@ const posts = (await getCollection('blog')).sort(
 );
 const featuredPost = posts.at(0);
 const archivePosts = posts.slice(1);
+const hasPosts = posts.length > 0;
 const tagCounts = Array.from(new Set(posts.flatMap((post) => post.data.tags))).map((tag) => ({
 	tag,
 	count: posts.filter((post) => post.data.tags.includes(tag)).length,
@@ -17,7 +18,7 @@ const tagCounts = Array.from(new Set(posts.flatMap((post) => post.data.tags))).m
 	<section class="hero">
 		<p class="eyebrow">전체 기록</p>
 		<h1>모든 기록.</h1>
-		<p>데일리와 공부 기록에 흩어진 글을 한 번에 훑어볼 수 있는 전체 기록실입니다.</p>
+		<p>데일리와 공부 기록을 모은 전체 색인.</p>
 	</section>
 
 	{
@@ -59,25 +60,33 @@ const tagCounts = Array.from(new Set(posts.flatMap((post) => post.data.tags))).m
 		<div class="section-heading">
 			<h2 id="archive">기록 목록</h2>
 		</div>
-		<ul class="archive-list">
-			{
-				archivePosts.map((post) => (
-					<li class="archive-item">
-						<time datetime={post.data.date.toISOString()}>
-							{post.data.date.toLocaleDateString('ko-KR', {
-								month: 'long',
-								day: 'numeric',
-								year: 'numeric',
-							})}
-						</time>
-						<div>
-							<a href={`/blog/${post.id}/`}>{post.data.title}</a>
-							<p>{post.data.description}</p>
-							<span>{post.data.tags.join(' / ')}</span>
-						</div>
-					</li>
-				))
-			}
-		</ul>
+		{
+			hasPosts ? (
+				<ul class="archive-list">
+					{archivePosts.map((post) => (
+						<li class="archive-item">
+							<time datetime={post.data.date.toISOString()}>
+								{post.data.date.toLocaleDateString('ko-KR', {
+									month: 'long',
+									day: 'numeric',
+									year: 'numeric',
+								})}
+							</time>
+							<div>
+								<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+								<p>{post.data.description}</p>
+								<span>{post.data.tags.join(' / ')}</span>
+							</div>
+						</li>
+					))}
+				</ul>
+			) : (
+				<div class="note-panel" role="status">
+					<p class="kicker">준비 중</p>
+					<h2>아직 공개된 기록 없음.</h2>
+					<p>최신 기록 대기.</p>
+				</div>
+			)
+		}
 	</section>
 </BaseLayout>

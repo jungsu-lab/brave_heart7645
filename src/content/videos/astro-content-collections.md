@@ -7,7 +7,6 @@ tags:
   - 콘텐츠
   - 튜토리얼
 platform: "YouTube"
-videoUrl: "https://example.com/videos/astro-content-collections"
 duration: "8분 20초"
 ---
 

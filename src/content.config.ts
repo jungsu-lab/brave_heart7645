@@ -32,7 +32,7 @@ const videos = defineCollection({
 	schema: z.object({
 		...baseSchema,
 		platform: z.string(),
-		videoUrl: z.string().url(),
+		videoUrl: z.string().url().optional(),
 		duration: z.string(),
 	}),
 });

@@ -7,7 +7,6 @@ tags:
   - 영상
   - 리뷰
 platform: "YouTube"
-videoUrl: "https://example.com/videos/making-process-log"
 duration: "6분 45초"
 ---
 

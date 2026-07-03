@@ -40,9 +40,13 @@ const { Content } = await render(video);
 				{video.data.duration}
 				</p>
 			<p class="tags-line">태그: {video.data.tags.join(', ')}</p>
-			<p class="tags-line">
-				<a href={video.data.videoUrl}>영상 보기</a>
-			</p>
+			{
+				video.data.videoUrl && (
+					<p class="tags-line">
+						<a href={video.data.videoUrl}>영상 보기</a>
+					</p>
+				)
+			}
 		</header>
 		<Content />
 	</article>
