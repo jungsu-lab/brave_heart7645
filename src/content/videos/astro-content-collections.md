@@ -1,6 +1,6 @@
 ---
 title: "Astro 컬렉션을 써보면서"
-description: "글이 늘어날 때 정리가 필요해서 Astro 컬렉션을 써본 기록."
+description: "글이 늘어날 때 정리가 필요해서 Astro 컬렉션을 써본 기록"
 date: 2026-06-15
 tags:
   - Astro

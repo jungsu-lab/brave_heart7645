@@ -1,6 +1,6 @@
 ---
 title: "FrameFit 사진 코치 앱"
-description: "원하는 사진 스타일을 고르면 촬영 구도와 템플릿 미리보기를 안내하는 Flutter 기반 사진 코칭 앱 프로토타입."
+description: "원하는 사진 스타일을 고르면 촬영 구도와 템플릿 미리보기를 안내하는 Flutter 기반 사진 코칭 앱 프로토타입"
 date: 2026-07-03
 tags:
   - Flutter

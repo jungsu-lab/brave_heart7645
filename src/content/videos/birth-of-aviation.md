@@ -1,6 +1,6 @@
 ---
 title: "A Line Became a Wing"
-description: "연필 선이 날개가 되고, 날개가 하늘이 되는 비행의 탄생 콘셉트 보드."
+description: "연필 선이 날개가 되고, 날개가 하늘이 되는 비행의 탄생 콘셉트 보드"
 date: 2026-06-19
 tags:
   - AI 영상
