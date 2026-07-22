@@ -1,0 +1,140 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const projects = await getCollection('projects');
+const byId = new Map(projects.map((project) => [project.id, project]));
+const requireProject = (id: string) => {
+	const project = byId.get(id);
+	if (!project) throw new Error(`Missing strawberry project entry: ${id}`);
+	return project;
+};
+
+const series = [
+	requireProject('strawberry-timeseries-data-validation'),
+	requireProject('strawberry-target-model-selection'),
+	requireProject('strawberry-multimodal-diagnostic-harness'),
+];
+
+const archive = [
+	requireProject('strawberry-competition-preprocessing'),
+	requireProject('strawberry-smartfarm-competition'),
+];
+---
+
+<BaseLayout
+	title="jungsu blog | 딸기 스마트팜 프로젝트"
+	description="딸기 스마트팜 데이터 정제, 근권부 시계열 예측, 멀티모달 진단 하네스를 한곳에 모은 프로젝트 기록"
+>
+	<div class="strawberry-hub">
+		<section class="strawberry-hero" aria-labelledby="strawberry-title">
+			<div class="strawberry-hero__copy">
+				<div>
+					<p class="eyebrow">Strawberry smartfarm archive</p>
+					<h1 id="strawberry-title">딸기<br />프로젝트</h1>
+					<p class="strawberry-hero__lede">
+						원시 센서 정제부터 시계열 예측, 농가 진단 보고서까지. 점수 하나보다
+						데이터 계약, 실패일, 일반화와 재현성을 중심으로 다시 정리한 작업실이다.
+					</p>
+				</div>
+				<div class="strawberry-hero__meta" aria-label="프로젝트 주제">
+					<span class="strawberry-pill">5개 기록</span>
+					<span class="strawberry-pill">26 train scenarios</span>
+					<span class="strawberry-pill">3 prediction targets</span>
+				</div>
+			</div>
+			<div class="strawberry-hero__visual">
+				<img
+					src="/images/projects/strawberry/raw-rootzone-targets.png"
+					alt="온실별 토양수분, 토양 EC, 배지온 원시 시계열을 비교한 차트"
+					loading="eager"
+				/>
+			</div>
+		</section>
+
+		<section class="strawberry-section" aria-labelledby="series-title">
+			<div class="strawberry-section__heading">
+				<div>
+					<p class="eyebrow">Competition retrospective</p>
+					<h2 id="series-title">대회 회고 시리즈</h2>
+				</div>
+				<p>
+					데이터를 어떻게 나눴는지부터 어떤 모델을 버렸는지까지, 최종 결과에
+					도달한 판단을 세 편으로 나눴다.
+				</p>
+			</div>
+			<ol class="strawberry-series">
+				{
+					series.map((project, index) => (
+						<li>
+							<a href={`/projects/${project.id}/`}>
+								<span class="strawberry-series__index">
+									CHAPTER {String(index + 1).padStart(2, '0')}
+								</span>
+								<div>
+									<h3>{project.data.title}</h3>
+									<p>{project.data.description}</p>
+								</div>
+								<span class="strawberry-series__arrow" aria-hidden="true">→</span>
+							</a>
+						</li>
+					))
+				}
+			</ol>
+		</section>
+
+		<section class="strawberry-section" aria-labelledby="archive-title">
+			<div class="strawberry-section__heading">
+				<div>
+					<p class="eyebrow">Earlier notes</p>
+					<h2 id="archive-title">이전 딸기 기록</h2>
+				</div>
+				<p>이번 회고 이전에 올렸던 전처리와 스마트팜 대회 작업도 같은 흐름에서 이어 볼 수 있다.</p>
+			</div>
+			<ul class="strawberry-archive-grid">
+				{
+					archive.map((project) => (
+						<li>
+							<a class="content-card" href={`/projects/${project.id}/`}>
+								<h3>{project.data.title}</h3>
+								<p>{project.data.description}</p>
+								<p class="meta">
+									{project.data.date.toLocaleDateString('ko-KR', {
+										year: 'numeric',
+										month: 'long',
+										day: 'numeric',
+									})}
+								</p>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<section class="strawberry-section" aria-labelledby="principles-title">
+			<div class="strawberry-section__heading">
+				<div>
+					<p class="eyebrow">Working principles</p>
+					<h2 id="principles-title">이 프로젝트가 남긴 기준</h2>
+				</div>
+				<p>모델이 바뀌어도 유지한 세 가지 원칙이다.</p>
+			</div>
+			<ul class="strawberry-principles">
+				<li>
+					<strong>경계를 먼저 확인한다</strong>
+					<p>날짜처럼 보이는 시나리오와 실제 시간 흐름을 구분하고 모든 rolling을 경계 안에서 계산한다.</p>
+				</li>
+				<li>
+					<strong>실패일을 확대한다</strong>
+					<p>평균 점수뿐 아니라 fold, 농가, 하루 단위 회귀를 시계열 그림으로 확인한다.</p>
+				</li>
+				<li>
+					<strong>모르면 멈춘다</strong>
+					<p>재현 경로가 없거나 미학습 질병을 안전하게 판별하지 못하면 자동 확정하지 않는다.</p>
+				</li>
+			</ul>
+		</section>
+	</div>
+</BaseLayout>
+
