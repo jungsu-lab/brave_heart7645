@@ -18,6 +18,13 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
+const isStrawberryProject = project.data.tags.includes('딸기');
+const relatedStrawberryProjects = isStrawberryProject
+	? (await getCollection('projects'))
+			.filter((candidate) => candidate.id !== project.id && candidate.data.tags.includes('딸기'))
+			.sort((first, second) => second.data.date.valueOf() - first.data.date.valueOf())
+			.slice(0, 4)
+	: [];
 const projectStatusLabels: Record<string, string> = {
 	Active: '운영 중',
 	Complete: '완료',
@@ -27,6 +34,7 @@ const projectStatusLabels: Record<string, string> = {
 
 <BaseLayout title={`jungsu blog | ${project.data.title}`} description={project.data.description}>
 	<article>
+		{isStrawberryProject && <a class="back-link" href="/projects/strawberry/">← 딸기 프로젝트 전체 보기</a>}
 		<header>
 			<p class="eyebrow">프로젝트</p>
 			<h1>{project.data.title}</h1>
@@ -47,5 +55,20 @@ const projectStatusLabels: Record<string, string> = {
 			<p class="tags-line">태그: {project.data.tags.join(', ')}</p>
 		</header>
 		<Content />
+		{
+			isStrawberryProject && relatedStrawberryProjects.length > 0 && (
+				<section class="strawberry-related" aria-labelledby="strawberry-related-title">
+					<p class="eyebrow">Continue reading</p>
+					<h2 id="strawberry-related-title">딸기 프로젝트의 다른 기록</h2>
+					<ul class="strawberry-related__grid">
+						{relatedStrawberryProjects.map((relatedProject) => (
+							<li>
+								<a href={`/projects/${relatedProject.id}/`}>{relatedProject.data.title}</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			)
+		}
 	</article>
 </BaseLayout>

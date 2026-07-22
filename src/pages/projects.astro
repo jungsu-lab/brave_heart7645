@@ -6,6 +6,8 @@ const projects = (await getCollection('projects')).sort(
 	(firstProject, secondProject) =>
 		secondProject.data.date.valueOf() - firstProject.data.date.valueOf(),
 );
+const strawberryProjects = projects.filter((project) => project.data.tags.includes('딸기'));
+const otherProjects = projects.filter((project) => !project.data.tags.includes('딸기'));
 const projectStatusLabels: Record<string, string> = {
 	Active: '운영 중',
 	Complete: '완료',
@@ -22,11 +24,38 @@ const projectStatusLabels: Record<string, string> = {
 
 	<section class="page-section">
 		<div class="section-heading">
-			<h2>프로젝트 목록</h2>
+			<h2>Featured collection</h2>
+		</div>
+		<a class="project-feature-card" href="/projects/strawberry/">
+			<div class="project-feature-card__copy">
+				<p class="eyebrow">Strawberry project</p>
+				<h2>딸기 스마트팜 프로젝트</h2>
+				<p>
+					데이터 정제부터 근권부 시계열 예측, 멀티모달 진단 하네스까지.
+					성공한 모델뿐 아니라 기각한 실험과 검증 원칙을 함께 모았다.
+				</p>
+				<div class="project-feature-card__meta">
+					<span>{strawberryProjects.length}개의 기록</span>
+					<span>시계열 · 스마트팜 · 멀티모달</span>
+				</div>
+			</div>
+			<div class="project-feature-card__visual">
+				<img
+					src="/images/projects/strawberry/raw-rootzone-targets.png"
+					alt="네 개 온실의 토양수분, EC, 배지온 원시 시계열"
+					loading="eager"
+				/>
+			</div>
+		</a>
+	</section>
+
+	<section class="page-section">
+		<div class="section-heading">
+			<h2>다른 프로젝트</h2>
 		</div>
 		<ul class="card-grid">
 			{
-				projects.map((project) => (
+				otherProjects.map((project) => (
 					<li>
 						<a class="content-card" href={`/projects/${project.id}/`}>
 							<h3>{project.data.title}</h3>
