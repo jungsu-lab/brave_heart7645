@@ -103,6 +103,15 @@ All spacing derives from a base of 4px.
 - **Accessibility**: meaningful link text and semantic aside for the mood card.
 - **Motion**: entry rise animation, disabled for reduced motion.
 
+### Admin CMS Surface
+
+- **Scope**: `/admin/` is an owner-only operational surface and is not linked from public navigation.
+- **System**: use Sveltia CMS's maintained interface instead of recreating editor, form, and asset-library primitives.
+- **Branding**: keep the site favicon and Korean labels; do not override the CMS component tokens with ad-hoc styles.
+- **Korean copy**: preserve whole Korean words in editor text areas instead of the CMS default `break-all` behavior.
+- **Accessibility**: preserve the CMS keyboard, focus, validation, loading, empty, and error states.
+- **Indexing**: keep the route out of search results with `noindex`, `nofollow`, and `noarchive`.
+
 ## 6. Motion & Interaction
 
 ### Timing
