@@ -1,0 +1,173 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+
+backend:
+  name: github
+  repo: jungsu-lab/brave_heart7645
+  branch: main
+  auth_methods:
+    - token
+  commit_messages:
+    create: '새 {{collection}} 작성: {{slug}}'
+    update: '{{collection}} 수정: {{slug}}'
+    delete: '{{collection}} 삭제: {{slug}}'
+    uploadMedia: '이미지 업로드: {{path}}'
+    deleteMedia: '이미지 삭제: {{path}}'
+
+site_url: https://braveheart7645.vercel.app
+display_url: https://braveheart7645.vercel.app
+logo_url: /favicon.svg
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+output:
+  omit_empty_optional_fields: true
+
+slug:
+  encoding: unicode
+  clean_accents: true
+  sanitize_replacement: '-'
+  trim: true
+  lowercase: true
+
+collections:
+  - name: blog
+    label: 데일리와 공부 글
+    label_singular: 글
+    description: Daily와 Study에 표시되는 개인 기록과 공부 노트
+    folder: src/content/blog
+    create: true
+    format: yaml-frontmatter
+    extension: md
+    slug: '{{slug}}'
+    summary: '{{title}} - {{date | date("YYYY-MM-DD")}}'
+    preview_path: blog/{{slug}}
+    fields:
+      - label: 제목
+        name: title
+        widget: string
+        maxlength: 100
+      - label: 한 줄 설명
+        name: description
+        widget: text
+        maxlength: 220
+      - label: 작성일
+        name: date
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: YYYY-MM-DD
+        time_format: false
+      - label: 태그
+        name: tags
+        widget: list
+        default: []
+      - label: 작성자
+        name: author
+        widget: string
+        default: jungsu
+      - label: 읽는 시간
+        name: readingTime
+        widget: string
+        default: 3분
+        hint: '예: 3분, 8분'
+      - label: 본문
+        name: body
+        widget: markdown
+
+  - name: projects
+    label: 프로젝트
+    label_singular: 프로젝트
+    description: 프로젝트 쇼룸에 표시되는 작업 기록
+    folder: src/content/projects
+    create: true
+    format: yaml-frontmatter
+    extension: md
+    slug: '{{slug}}'
+    summary: '{{title}} - {{status}}'
+    preview_path: projects/{{slug}}
+    fields:
+      - label: 제목
+        name: title
+        widget: string
+        maxlength: 100
+      - label: 한 줄 설명
+        name: description
+        widget: text
+        maxlength: 260
+      - label: 작성일
+        name: date
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: YYYY-MM-DD
+        time_format: false
+      - label: 태그
+        name: tags
+        widget: list
+        default: []
+      - label: 역할
+        name: role
+        widget: string
+      - label: 상태
+        name: status
+        widget: select
+        options:
+          - label: 운영 중
+            value: Active
+          - label: 완료
+            value: Complete
+          - label: 실험 중
+            value: Study
+      - label: 기술 스택
+        name: stack
+        widget: list
+        default: []
+      - label: 본문
+        name: body
+        widget: markdown
+
+  - name: videos
+    label: AI 영상
+    label_singular: 영상 기록
+    description: AI 영상 실험실에 표시되는 영상과 제작 기록
+    folder: src/content/videos
+    create: true
+    format: yaml-frontmatter
+    extension: md
+    slug: '{{slug}}'
+    summary: '{{title}} - {{date | date("YYYY-MM-DD")}}'
+    preview_path: videos/{{slug}}
+    fields:
+      - label: 제목
+        name: title
+        widget: string
+        maxlength: 100
+      - label: 한 줄 설명
+        name: description
+        widget: text
+        maxlength: 260
+      - label: 작성일
+        name: date
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: YYYY-MM-DD
+        time_format: false
+      - label: 태그
+        name: tags
+        widget: list
+        default: []
+      - label: 플랫폼
+        name: platform
+        widget: string
+        default: AI Video
+      - label: 영상 주소
+        name: videoUrl
+        widget: string
+        type: url
+        required: false
+      - label: 길이 또는 형식
+        name: duration
+        widget: string
+        hint: '예: 8분 20초, 8패널 콘셉트'
+      - label: 본문
+        name: body
+        widget: markdown
