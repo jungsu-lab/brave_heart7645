@@ -12,6 +12,7 @@ const blog = defineCollection({
 	loader: glob({ pattern: '**/[^_]*.md', base: './src/content/blog' }),
 	schema: z.object({
 		...baseSchema,
+		category: z.enum(['daily', 'study']).default('daily'),
 		author: z.string(),
 		readingTime: z.string(),
 	}),

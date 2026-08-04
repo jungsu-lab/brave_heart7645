@@ -2,6 +2,7 @@
 title: "7/22"
 description: "딸기 대회를 진행하면서 거의 이틀 동안 잠을 제대로 못 잔 이야기"
 date: 2026-07-22
+category: daily
 tags: [데일리, 딸기대회, 데이터분석, 팀프로젝트]
 author: "jungsu"
 readingTime: "4분"

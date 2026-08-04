@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection('blog')).filter((post) => post.data.category === 'study').sort(
 	(firstPost, secondPost) => secondPost.data.date.valueOf() - firstPost.data.date.valueOf(),
 );
 const studyTags = ['AI', '개발', '디자인', '프롬프트', '워크플로'];
@@ -26,8 +26,7 @@ const studyTags = ['AI', '개발', '디자인', '프롬프트', '워크플로'];
 			<h2 id="study-notes">공부 노트</h2>
 		</div>
 		<ul class="archive-list">
-			{
-				posts.map((post) => (
+			{posts.length > 0 ? posts.map((post) => (
 					<li class="archive-item">
 						<time datetime={post.data.date.toISOString()}>
 							{post.data.date.toLocaleDateString('ko-KR', {
@@ -42,8 +41,13 @@ const studyTags = ['AI', '개발', '디자인', '프롬프트', '워크플로'];
 							<span>{post.data.tags.join(' / ')}</span>
 						</div>
 					</li>
-				))
-			}
+				)) : (
+					<li class="note-panel" role="status">
+						<p class="kicker">준비 중</p>
+						<h2>아직 공개된 공부 노트 없음</h2>
+						<p>다음 학습 기록을 정리하고 있습니다.</p>
+					</li>
+				)}
 		</ul>
 	</section>
 </BaseLayout>
