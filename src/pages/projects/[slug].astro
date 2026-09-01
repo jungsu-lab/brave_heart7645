@@ -18,10 +18,18 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
-const isStrawberryProject = project.data.tags.includes('딸기');
-const relatedStrawberryProjects = isStrawberryProject
+const projectCollections = [
+	{ tag: '딸기', slug: 'strawberry', backLabel: '← 딸기 프로젝트 전체 보기', relatedTitle: '딸기 프로젝트의 다른 기록' },
+	{ tag: 'LG에이머스', slug: 'lg-aimers', backLabel: '← LG Aimers 프로젝트 전체 보기', relatedTitle: 'LG Aimers 여정의 다른 기록' },
+];
+const activeCollection =
+	projectCollections.find((collection) => project.data.tags.includes(collection.tag)) ?? null;
+const relatedProjects = activeCollection
 	? (await getCollection('projects'))
-			.filter((candidate) => candidate.id !== project.id && candidate.data.tags.includes('딸기'))
+			.filter(
+				(candidate) =>
+					candidate.id !== project.id && candidate.data.tags.includes(activeCollection.tag),
+			)
 			.sort((first, second) => second.data.date.valueOf() - first.data.date.valueOf())
 			.slice(0, 4)
 	: [];
@@ -34,7 +42,7 @@ const projectStatusLabels: Record<string, string> = {
 
 <BaseLayout title={`jungsu blog | ${project.data.title}`} description={project.data.description}>
 	<article>
-		{isStrawberryProject && <a class="back-link" href="/projects/strawberry/">← 딸기 프로젝트 전체 보기</a>}
+		{activeCollection && <a class="back-link" href={`/projects/${activeCollection.slug}/`}>{activeCollection.backLabel}</a>}
 		<header>
 			<p class="eyebrow">프로젝트</p>
 			<h1>{project.data.title}</h1>
@@ -56,12 +64,12 @@ const projectStatusLabels: Record<string, string> = {
 		</header>
 		<Content />
 		{
-			isStrawberryProject && relatedStrawberryProjects.length > 0 && (
-				<section class="strawberry-related" aria-labelledby="strawberry-related-title">
+			activeCollection && relatedProjects.length > 0 && (
+				<section class="strawberry-related" aria-labelledby="related-title">
 					<p class="eyebrow">Continue reading</p>
-					<h2 id="strawberry-related-title">딸기 프로젝트의 다른 기록</h2>
+					<h2 id="related-title">{activeCollection.relatedTitle}</h2>
 					<ul class="strawberry-related__grid">
-						{relatedStrawberryProjects.map((relatedProject) => (
+						{relatedProjects.map((relatedProject) => (
 							<li>
 								<a href={`/projects/${relatedProject.id}/`}>{relatedProject.data.title}</a>
 							</li>

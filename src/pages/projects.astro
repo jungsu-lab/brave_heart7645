@@ -2,17 +2,79 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const projects = (await getCollection('projects')).sort(
-	(firstProject, secondProject) =>
-		secondProject.data.date.valueOf() - firstProject.data.date.valueOf(),
-);
+const projects = await getCollection('projects');
 const strawberryProjects = projects.filter((project) => project.data.tags.includes('딸기'));
-const otherProjects = projects.filter((project) => !project.data.tags.includes('딸기'));
+const lgAimersProjects = projects.filter((project) => project.data.tags.includes('LG에이머스'));
+const otherProjects = projects.filter(
+	(project) => !project.data.tags.includes('딸기') && !project.data.tags.includes('LG에이머스'),
+);
 const projectStatusLabels: Record<string, string> = {
 	Active: '운영 중',
 	Complete: '완료',
 	Study: '실험 중',
 };
+
+const latestDate = (list: typeof projects) =>
+	list.reduce((max, project) => (project.data.date > max ? project.data.date : max), new Date(0));
+
+type Entry = {
+	href: string;
+	eyebrow: string;
+	title: string;
+	description: string;
+	meta: string[];
+	date: Date;
+	image?: string;
+	imageAlt?: string;
+	contain?: boolean;
+	camera?: boolean;
+};
+
+const collectionEntries: Entry[] = [
+	{
+		href: '/projects/lg-aimers/',
+		eyebrow: 'LG Aimers · KBO',
+		title: 'KBO 제구 예측',
+		description:
+			'투구마다 제구 성공 확률을 맞히는 Brier 채점 대회. 문제 정의부터 검증 방법론, 모델 아키텍처, 판별력의 벽까지 여정을 네 편으로 나눴다.',
+		meta: [`${lgAimersProjects.length}편의 기록`, '확률예측 · 앙상블 · 검증설계'],
+		date: latestDate(lgAimersProjects),
+		image: '/images/projects/lg-aimers/shap-importance.png',
+		imageAlt: 'A·B_F·B_R 세 팔의 평균 SHAP 중요도 막대그래프',
+		contain: true,
+	},
+	{
+		href: '/projects/strawberry/',
+		eyebrow: 'Strawberry project',
+		title: '딸기 스마트팜 프로젝트',
+		description:
+			'데이터 정제부터 근권부 시계열 예측, 멀티모달 진단 하네스까지. 성공한 모델뿐 아니라 기각한 실험과 검증 원칙을 함께 모았다.',
+		meta: [`${strawberryProjects.length}개의 기록`, '시계열 · 스마트팜 · 멀티모달'],
+		date: latestDate(strawberryProjects),
+		image: '/images/projects/strawberry/raw-rootzone-targets.png',
+		imageAlt: '네 개 온실의 토양수분, EC, 배지온 원시 시계열',
+		contain: false,
+	},
+];
+
+const standaloneEntries: Entry[] = otherProjects.map((project) => ({
+	href: `/projects/${project.id}/`,
+	eyebrow: '프로젝트',
+	title: project.data.title,
+	description: project.data.description,
+	meta: [
+		`${project.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} · ${
+			projectStatusLabels[project.data.status] ?? project.data.status
+		}`,
+		project.data.stack.join(' · '),
+	],
+	date: project.data.date,
+	camera: project.id === 'framefit-photo-coach',
+}));
+
+const entries = [...collectionEntries, ...standaloneEntries].sort(
+	(first, second) => second.date.valueOf() - first.date.valueOf(),
+);
 ---
 
 <BaseLayout title="jungsu blog | 프로젝트">
@@ -23,59 +85,66 @@ const projectStatusLabels: Record<string, string> = {
 	</section>
 
 	<section class="page-section">
-		<div class="section-heading">
-			<h2>Featured collection</h2>
-		</div>
-		<a class="project-feature-card" href="/projects/strawberry/">
-			<div class="project-feature-card__copy">
-				<p class="eyebrow">Strawberry project</p>
-				<h2>딸기 스마트팜 프로젝트</h2>
-				<p>
-					데이터 정제부터 근권부 시계열 예측, 멀티모달 진단 하네스까지.
-					성공한 모델뿐 아니라 기각한 실험과 검증 원칙을 함께 모았다.
-				</p>
-				<div class="project-feature-card__meta">
-					<span>{strawberryProjects.length}개의 기록</span>
-					<span>시계열 · 스마트팜 · 멀티모달</span>
-				</div>
-			</div>
-			<div class="project-feature-card__visual">
-				<img
-					src="/images/projects/strawberry/raw-rootzone-targets.png"
-					alt="네 개 온실의 토양수분, EC, 배지온 원시 시계열"
-					loading="eager"
-				/>
-			</div>
-		</a>
-	</section>
-
-	<section class="page-section">
-		<div class="section-heading">
-			<h2>다른 프로젝트</h2>
-		</div>
-		<ul class="card-grid">
+		<div class="project-feature-list">
 			{
-				otherProjects.map((project) => (
-					<li>
-						<a class="content-card" href={`/projects/${project.id}/`}>
-							<h3>{project.data.title}</h3>
-							<p>{project.data.description}</p>
-							<p class="meta">
-								<time datetime={project.data.date.toISOString()}>
-									{project.data.date.toLocaleDateString('ko-KR', {
-										month: 'long',
-										day: 'numeric',
-										year: 'numeric',
-									})}
-								</time>
-								{' · '}
-								{projectStatusLabels[project.data.status] ?? project.data.status}
-							</p>
-							<p class="tags-line">{project.data.stack.join(', ')}</p>
-						</a>
-					</li>
+				entries.map((entry) => (
+					<a
+						class="project-feature-card"
+						href={entry.href}
+						style={entry.image || entry.camera ? undefined : 'grid-template-columns: 1fr;'}
+					>
+						<div class="project-feature-card__copy">
+							<p class="eyebrow">{entry.eyebrow}</p>
+							<h2>{entry.title}</h2>
+							<p>{entry.description}</p>
+							<div class="project-feature-card__meta">
+								{entry.meta.map((item) => (
+									<span>{item}</span>
+								))}
+							</div>
+						</div>
+						{entry.image && (
+							<div
+								class="project-feature-card__visual"
+								style={entry.contain ? 'background:var(--card-soft);' : undefined}
+							>
+								<img
+									src={entry.image}
+									alt={entry.imageAlt}
+									loading="lazy"
+									style={entry.contain ? 'height:20rem; object-fit:contain; padding:1rem;' : undefined}
+								/>
+							</div>
+						)}
+						{!entry.image && entry.camera && (
+							<div
+								class="project-feature-card__visual"
+								style="display:flex; align-items:center; justify-content:center; height:20rem; background:var(--card-soft);"
+							>
+								<svg viewBox="0 0 240 180" width="52%" height="auto" role="img" aria-label="카메라 일러스트">
+									<rect x="20" y="46" width="200" height="118" rx="18" fill="#334155" />
+									<rect x="84" y="28" width="60" height="26" rx="7" fill="#334155" />
+									<circle cx="120" cy="106" r="44" fill="#0f8f72" />
+									<circle cx="120" cy="106" r="29" fill="#1f2933" />
+									<circle cx="110" cy="96" r="9" fill="#ffffff" opacity="0.35" />
+									<circle cx="190" cy="72" r="7" fill="#f5c84b" />
+								</svg>
+							</div>
+						)}
+					</a>
 				))
 			}
-		</ul>
+		</div>
 	</section>
 </BaseLayout>
+
+<style>
+	.project-feature-list {
+		display: grid;
+		gap: 1.5rem;
+	}
+
+	.project-feature-list .project-feature-card {
+		margin-bottom: 0;
+	}
+</style>

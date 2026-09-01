@@ -1,0 +1,109 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const projects = await getCollection('projects');
+const byId = new Map(projects.map((project) => [project.id, project]));
+const requireProject = (id: string) => {
+	const project = byId.get(id);
+	if (!project) throw new Error(`Missing LG Aimers project entry: ${id}`);
+	return project;
+};
+
+const series = [
+	requireProject('lg-aimers-problem-and-rules'),
+	requireProject('lg-aimers-validation-methodology'),
+	requireProject('lg-aimers-model-and-wins'),
+	requireProject('lg-aimers-the-wall'),
+];
+---
+
+<BaseLayout
+	title="jungsu blog | LG Aimers KBO 제구 예측"
+	description="KBO 투구 제구 성공 확률을 예측한 LG Aimers 9기 여정. 문제 정의, 검증 방법론, 모델 아키텍처, 판별력의 벽까지 네 편으로 정리한 기록."
+>
+	<div class="strawberry-hub">
+		<section class="strawberry-hero" aria-labelledby="lg-title">
+			<div class="strawberry-hero__copy">
+				<div>
+					<p class="eyebrow">LG Aimers 9기 · DACON 236743</p>
+					<h1 id="lg-title">KBO 제구<br />예측</h1>
+					<p class="strawberry-hero__lede">
+						투구마다 제구 성공 확률을 맞히는 Brier 채점 대회. 최종 1135점에서
+						멈췄지만, 진짜로 남긴 건 점수가 아니라 그 격차의 정체를 어떻게
+						좁혀 갔는가다. 문제 · 검증 · 모델 · 벽을 네 편으로 나눠 정리했다.
+					</p>
+				</div>
+				<div class="strawberry-hero__meta" aria-label="핵심 지표">
+					<span class="strawberry-pill">4편 기록</span>
+					<span class="strawberry-pill">Brier 채점</span>
+					<span class="strawberry-pill">최종 1135.33</span>
+					<span class="strawberry-pill">2인 협업</span>
+				</div>
+			</div>
+			<div class="strawberry-hero__visual" style="display:flex; align-items:center; justify-content:center; padding:1.25rem; background:var(--card-soft);">
+				<img
+					src="/images/projects/lg-aimers/feature-dependency.png"
+					alt="주요 변수의 SHAP 의존성 곡선을 2022·2023·2024로 겹쳐 그린 데이터 분석 그래프"
+					loading="eager"
+					style="width:100%; height:auto; min-height:0; object-fit:contain;"
+				/>
+			</div>
+		</section>
+
+		<section class="strawberry-section" aria-labelledby="lg-series-title">
+			<div class="strawberry-section__heading">
+				<div>
+					<p class="eyebrow">Competition journey</p>
+					<h2 id="lg-series-title">대회 여정 시리즈</h2>
+				</div>
+				<p>
+					무엇을 맞혀야 하는가(문제)부터, 무엇을 믿어야 하는가(검증),
+					무엇을 세웠는가(모델), 그리고 어디서 막혔는가(벽)까지 네 편이다.
+				</p>
+			</div>
+			<ol class="strawberry-series">
+				{
+					series.map((project, index) => (
+						<li>
+							<a href={`/projects/${project.id}/`}>
+								<span class="strawberry-series__index">
+									CHAPTER {String(index + 1).padStart(2, '0')}
+								</span>
+								<div>
+									<h3>{project.data.title}</h3>
+									<p>{project.data.description}</p>
+								</div>
+								<span class="strawberry-series__arrow" aria-hidden="true">→</span>
+							</a>
+						</li>
+					))
+				}
+			</ol>
+		</section>
+
+		<section class="strawberry-section" aria-labelledby="lg-principles-title">
+			<div class="strawberry-section__heading">
+				<div>
+					<p class="eyebrow">Working principles</p>
+					<h2 id="lg-principles-title">이 대회가 남긴 기준</h2>
+				</div>
+				<p>모델이 바뀌어도 유지한 세 가지 원칙이다.</p>
+			</div>
+			<ul class="strawberry-principles">
+				<li>
+					<strong>이월되는 것만 믿는다</strong>
+					<p>수학적 항등식과 리더보드 실측만 미래로 이월된다. 과거 연도에 맞춘 것은 예외 없이 무너졌다.</p>
+				</li>
+				<li>
+					<strong>혼합 수준에서 판정한다</strong>
+					<p>팔 하나의 이득이 혼합으로 전달되는 비율이 0.068~0.632로 요동쳤다. 배포되는 산출물로만 잰다.</p>
+				</li>
+				<li>
+					<strong>규정을 성능보다 앞에 둔다</strong>
+					<p>§2·§4·§9를 먼저 확인하고 만든다. 성능이 나와도 규칙 게이트를 못 넘으면 폐기했다.</p>
+				</li>
+			</ul>
+		</section>
+	</div>
+</BaseLayout>
