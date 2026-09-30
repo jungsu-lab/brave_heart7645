@@ -1,25 +1,57 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog')).filter((post) => post.data.category === 'mist').sort(
+	(firstPost, secondPost) => secondPost.data.date.valueOf() - firstPost.data.date.valueOf(),
+);
 ---
 
-<BaseLayout title="jungsu blog | Mist" description="동아리 Mist — 아직 활동 전, 기록을 시작할 공간">
+<BaseLayout title="jungsu blog | Mist" description="동아리 Mist — 함께 본 영화의 한줄 비평을 모아둔 공간">
 	<section class="hero">
 		<p class="eyebrow">Mist</p>
 		<h1>Mist</h1>
 		<p class="lede">
-			동아리 Mist의 기록을 모아 갈 공간. 아직 본격적인 활동 전이라, 이곳은
-			시작을 위한 자리다.
+			동아리 Mist의 기록을 모아 갈 공간. 함께 본 영화 한 편 한 편에 남긴
+			한줄 비평과 짧은 생각들.
 		</p>
 	</section>
 
-	<section class="page-section">
-		<div class="note-panel">
-			<p class="kicker">준비 중</p>
-			<h2>곧 채워질 예정</h2>
-			<p>
-				활동이 시작되면 여기에 모임 기록, 함께 만든 결과물, 배운 것들을
-				남길 계획이다. 지금은 자리만 잡아 두었다.
-			</p>
+	<section class="page-section" aria-labelledby="mist-notes">
+		<div class="section-heading">
+			<h2 id="mist-notes">영화 기록</h2>
 		</div>
+		{posts.length > 0 ? (
+			<ul class="mist-grid">
+				{posts.map((post) => (
+					<li>
+						<a class="mist-card" href={`/blog/${post.id}/`}>
+							<div class="mist-card__poster">
+								{post.data.poster && (
+									<img src={post.data.poster} alt={`${post.data.title} 포스터`} loading="lazy" />
+								)}
+							</div>
+							<div class="mist-card__body">
+								<h3>{post.data.title}</h3>
+								<p class="mist-card__quote">{post.data.description}</p>
+								<time datetime={post.data.date.toISOString()}>
+									{post.data.date.toLocaleDateString('ko-KR', {
+										month: 'long',
+										day: 'numeric',
+										year: 'numeric',
+									})}
+								</time>
+							</div>
+						</a>
+					</li>
+				))}
+			</ul>
+		) : (
+			<div class="note-panel" role="status">
+				<p class="kicker">준비 중</p>
+				<h2>아직 공개된 기록 없음</h2>
+				<p>활동이 시작되면 여기에 모임 기록과 비평을 남길 계획이다.</p>
+			</div>
+		)}
 	</section>
 </BaseLayout>

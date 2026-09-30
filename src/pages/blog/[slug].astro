@@ -18,6 +18,12 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
+const backLinkByCategory = {
+	daily: { href: '/daily/', label: '← 데일리로 돌아가기' },
+	study: { href: '/study/', label: '← 스터디 로그로 돌아가기' },
+	mist: { href: '/mist/', label: '← Mist로 돌아가기' },
+};
+const backLink = backLinkByCategory[post.data.category];
 const allPosts = await getCollection('blog');
 const relatedPosts = allPosts
 	.filter(
@@ -34,11 +40,25 @@ const relatedPosts = allPosts
 <BaseLayout title={`jungsu blog | ${post.data.title}`} description={post.data.description}>
 	<div class="article-layout">
 		<article class="article-body">
-			<a class="back-link" href="/daily/">← 데일리로 돌아가기</a>
+			<a class="back-link" href={backLink.href}>{backLink.label}</a>
 			<header>
-				<p class="eyebrow">기록</p>
+				{post.data.category === 'mist' && post.data.poster && (
+					<div class="mist-poster-hero">
+						<img src={post.data.poster} alt={`${post.data.title} 포스터`} />
+					</div>
+				)}
+				<p class="eyebrow">{post.data.category === 'mist' ? 'Mist · 한줄 비평' : '기록'}</p>
 				<h1>{post.data.title}</h1>
 				<p class="lede">{post.data.description}</p>
+				<p class="article-date">
+					<time datetime={post.data.date.toISOString()}>
+						{post.data.date.toLocaleDateString('ko-KR', {
+							month: 'long',
+							day: 'numeric',
+							year: 'numeric',
+						})}
+					</time>
+				</p>
 			</header>
 			<Content />
 			{

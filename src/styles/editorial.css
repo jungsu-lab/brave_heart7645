@@ -1,3 +1,10 @@
+.article-date {
+	margin: 0;
+	color: var(--muted);
+	font-size: 0.85rem;
+	font-weight: 700;
+}
+
 .split-layout {
 	display: grid;
 	grid-template-columns: minmax(0, 1.2fr) minmax(17rem, 0.8fr);
@@ -119,6 +126,107 @@
 	list-style: none;
 }
 
+.mist-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.mist-card {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	overflow: hidden;
+	color: var(--text);
+	background: var(--card);
+	box-shadow: var(--shadow);
+	text-decoration: none;
+	transition:
+		transform 220ms ease,
+		box-shadow 220ms ease;
+}
+
+.mist-card:hover {
+	transform: translateY(-0.35rem);
+	box-shadow: 0 24px 54px rgba(29, 51, 46, 0.18);
+}
+
+.mist-card__poster {
+	position: relative;
+	aspect-ratio: 2 / 3;
+	overflow: hidden;
+	background: linear-gradient(160deg, var(--sun), var(--accent-cool));
+}
+
+.mist-card__poster img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 420ms ease;
+}
+
+.mist-card:hover .mist-card__poster img {
+	transform: scale(1.05);
+}
+
+.mist-card__body {
+	display: grid;
+	gap: 0.5rem;
+	padding: 1.1rem 1.25rem 1.3rem;
+}
+
+.mist-card__body h3 {
+	margin: 0;
+	font-family: var(--title-font);
+	font-size: 1.25rem;
+	line-height: 1.25;
+}
+
+.mist-card__quote {
+	margin: 0;
+	color: var(--muted);
+	font-size: 0.95rem;
+	line-height: 1.6;
+}
+
+.mist-card__quote::before {
+	margin-right: 0.15rem;
+	color: var(--sun);
+	content: '“';
+}
+
+.mist-card__body time {
+	color: var(--muted);
+	font-size: 0.8rem;
+}
+
+.mist-poster-hero {
+	overflow: hidden;
+	max-width: 20rem;
+	margin: 0 0 1.5rem;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	aspect-ratio: 2 / 3;
+}
+
+.mist-poster-hero img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	object-fit: cover;
+}
+
 @media (max-width: 820px) {
 	.split-layout,
 	.path-grid,
@@ -129,5 +237,19 @@
 	.archive-item {
 		grid-template-columns: 1fr;
 		gap: 0.35rem;
+	}
+
+	.mist-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 540px) {
+	.mist-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.mist-poster-hero {
+		max-width: 14rem;
 	}
 }
